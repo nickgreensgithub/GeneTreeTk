@@ -34,7 +34,8 @@ from biolib.external.muscle import Muscle
 from biolib.external.mafft import Mafft
 from biolib.external.execute import check_dependencies
 
-class MsaWorkflow():
+
+class MsaWorkflow:
     """Workflow for creating multiple sequence alignment."""
 
     def __init__(self, cpus):

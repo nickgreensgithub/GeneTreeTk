@@ -35,8 +35,12 @@ from genetreetk.tree_compare import TreeCompare
 from genetreetk.orthologue_workflow import OrthologueWorkflow
 from genetreetk.arb_db_creator import ArbDbCreator
 
-class OptionsParser():
-    def __init__(self):
+
+
+class OptionsParser:
+    load_module_dependencies = False
+
+    def __init__(self, path_to_dependency_config_file: str = None):
         """Initialization"""
         self.logger = logging.getLogger('timestamp')
 
@@ -78,7 +82,7 @@ class OptionsParser():
         """Infer concatenated gene tree."""
         
         make_sure_path_exists(options.output_dir)
-        
+
         c = Concatenate(options.cpus)
         c.run(options.gene_dirs,
                 options.min_per_gene,
@@ -96,7 +100,7 @@ class OptionsParser():
         check_file_exists(options.taxonomy_file)
         
         make_sure_path_exists(options.output_dir)
-        
+
         r = Reduce(options.cpus)
         r.run(options.homolog_file, 
                 options.gene_ids, 
@@ -114,7 +118,7 @@ class OptionsParser():
         """Calculate bootstrap support for tree."""
         
         check_file_exists(options.tree)
-        
+
         bootstrap = Bootstrap(options.cpus)
         bootstrap.run(options.tree, 
                     options.msa_file,
@@ -128,7 +132,7 @@ class OptionsParser():
         
         check_file_exists(options.tree)
         check_file_exists(options.taxa_to_retain)
-        
+
         prune = Prune()
         prune.run(options.tree,
                     options.taxa_to_retain,
@@ -136,7 +140,7 @@ class OptionsParser():
     
     def prokka(self, options):
         """Run Prokka across multiple genome bins."""
-        
+
         prokka = Prokka(options.cpus)
         prokka.run(options.genome_dir, 
                     options.kingdom, 
@@ -145,7 +149,7 @@ class OptionsParser():
                     
     def create_db(self, options):      
         """Create dereplicated GeneTreeTk-compatible database."""
-        
+
         create_db = CreateDatabase(options.cpus)
         create_db.run(options.taxonomy,
                          options.type_strains,
@@ -171,7 +175,7 @@ class OptionsParser():
         
         check_file_exists(options.tree1)
         check_file_exists(options.tree2)
-        
+
         tc = TreeCompare()
         if options.weighted:
             wrf = tc.weighted_robinson_foulds(options.tree1, 

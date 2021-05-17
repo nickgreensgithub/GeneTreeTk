@@ -27,9 +27,9 @@ import logging
 
 from biolib.external.fasttree import FastTree
 from biolib.external.raxml import RAxML
+from genetreetk.common import check_tree_dependencies
 
-
-class Bootstrap():
+class Bootstrap:
     """Calculate bootstrap support."""
 
     def __init__(self, cpus):
@@ -67,11 +67,13 @@ class Bootstrap():
             Program to use for tree inference ['fasttree', 'raxml'].
         prot_model : str
             Protein substitution model for tree inference ['WAG', 'LG'].
-        num_replicates : str
+        num_replicates : int
             Number of bootstrap replicates to perform.
         output_tree : float
             Output tree with bootstrap values.
         """
+
+        check_tree_dependencies(tree_program, self.cpus)
 
         if tree_program == 'fasttree':
             self.logger.info('Calculating bootstraps with FastTree under %s+GAMMA.' % prot_model)
@@ -80,6 +82,7 @@ class Bootstrap():
                          msa_file,
                          'prot', 
                          prot_model,
+                         False,
                          num_replicates,
                          output_dir,
                          self.cpus)

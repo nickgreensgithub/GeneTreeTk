@@ -89,7 +89,7 @@ class ArbParser:
                 elif entry['core_list_status'] == 'public':  # only retrieve public records
                     genome_metadata[db_name] = entry
             except KeyError:
-                logging.warn("Metadata record not found for ID: %s, skipping" % db_name)
+                logging.warning("Metadata record not found for ID: %s, skipping" % db_name)
 
         return genome_metadata
 

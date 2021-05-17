@@ -34,7 +34,7 @@ import biolib.seq_io as seq_io
 
 import dendropy
 
-class Reduce():
+class Reduce:
     """Workflow for inferring a tree over a reduced set of genes."""
 
     def __init__(self, cpus):

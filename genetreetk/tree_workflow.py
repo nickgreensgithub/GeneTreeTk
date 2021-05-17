@@ -32,11 +32,11 @@ import biolib.seq_io as seq_io
 from biolib.external.execute import check_dependencies
 from biolib.external.fasttree import FastTree
 from biolib.external.raxml import RAxML
+from genetreetk.common import check_tree_dependencies
 
 import dendropy
 
-
-class TreeWorkflow():
+class TreeWorkflow:
     """Workflow for inferring tree."""
 
     def __init__(self, cpus):
@@ -48,18 +48,15 @@ class TreeWorkflow():
             Number of cpus to use during homology search.
         """
 
-        check_dependencies(['FastTreeMP', 
-                            'raxmlHPC-PTHREADS-SSE3'])
-
         self.logger = logging.getLogger('timestamp')
 
         self.cpus = cpus
 
-    def run(self, msa_file, 
-                tree_program, 
-                prot_model,
-                skip_rooting,
-                output_dir):
+    def run(self, msa_file,
+            tree_program,
+            prot_model,
+            skip_rooting,
+            output_dir):
         """Infer tree.
 
         Parameters
@@ -73,7 +70,9 @@ class TreeWorkflow():
         output_dir : str
           Directory to store results.
         """
-        
+
+        check_tree_dependencies(tree_program, self.cpus)
+
         num_seqs = sum([1 for _, _ in seq_io.read_seq(msa_file)])
         if num_seqs <= 2:
             self.logger.error('Insufficient number of sequences in MSA to infer tree.')
@@ -90,7 +89,7 @@ class TreeWorkflow():
             tree_unrooted_output = os.path.join(output_dir, prefix + '.unrooted.tree')
             tree_log = os.path.join(output_dir, prefix + '.tree.log')
             tree_output_log = os.path.join(output_dir, 'fasttree.log')
-            fasttree.run(msa_file, 'prot', prot_model, tree_unrooted_output, tree_log, tree_output_log)
+            fasttree.run(msa_file, 'prot', prot_model, False, tree_unrooted_output, tree_log, tree_output_log)
         elif tree_program == 'raxml':
             self.logger.info('Inferring gene tree with RAxML using PROTGAMMA%s.' % prot_model)
             

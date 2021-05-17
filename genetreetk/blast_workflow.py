@@ -45,7 +45,7 @@ from numpy import (percentile as np_percentile,
 import dendropy
 
 
-class BlastWorkflow():
+class BlastWorkflow:
     """Blast-based workflow for building a gene tree."""
 
     def __init__(self, cpus):
@@ -60,8 +60,8 @@ class BlastWorkflow():
         check_dependencies(['blastp', 
                             'mafft',
                             'muscle', 
-                            'FastTreeMP', 
-                            'raxmlHPC-PTHREADS-SSE3', 
+                            #'FastTreeMP',
+                            #'raxmlHPC-PTHREADS-SSE3',
                             't2t', 
                             'seqmagick',
                             'trimal'])
@@ -141,10 +141,10 @@ class BlastWorkflow():
             taxonomy.update(custom_taxonomy)
             
         # report distribution of query genes
-        mean_len, max_len, min_len, p10, p50, p90 = self._gene_distribution(query_proteins)
+        mean_len, max_len, min_len, p10, p50, p90 = gene_distribution(query_proteins)
         self.logger.info('Query gene lengths: min, mean, max = %d, %.1f, %d | p10, p50, p90 = %.1f, %.1f, %.1f' % (
-                                                                                        min_len, mean_len, max_len, 
-                                                                                        p10, p50, p90))
+            min_len, mean_len, max_len,
+            p10, p50, p90))
 
         # identify homologs using BLASTP
         self.logger.info('Identifying homologs using %s.' % homology_search)
@@ -193,32 +193,32 @@ class BlastWorkflow():
         # report gene length distribution of homologs
         mean_len, max_len, min_len, p10, p50, p90 = gene_distribution(db_homologs_tmp)
         self.logger.info('Homolog gene lengths: min, mean, max = %d, %.1f, %d | p10, p50, p90 = %.1f, %.1f, %.1f' % (
-                                                                                        min_len, mean_len, max_len, 
-                                                                                        p10, p50, p90))
-        
+            min_len, mean_len, max_len,
+            p10, p50, p90))
+
         # concatenate homologs with initial query genes
-        homolog_ouput_tmp = os.path.join(output_dir, 'homologs.faa.tmp')
+        homolog_output_tmp = os.path.join(output_dir, 'homologs.faa.tmp')
         if custom_homologs:
             custom_db_homologs_tmp = os.path.join(output_dir, 'custom_homologs_db.tmp')
             custom_gene_precontext, custom_gene_postcontext = self.extract_homologs_and_context(custom_homologs.keys(), custom_db_file, custom_db_homologs_tmp)
             gene_precontext.update(custom_gene_precontext)
             gene_postcontext.update(custom_gene_postcontext)
             homologs.update(custom_homologs)
-            concatenate_files([query_proteins, db_homologs_tmp, custom_db_homologs_tmp], homolog_ouput_tmp)
+            concatenate_files([query_proteins, db_homologs_tmp, custom_db_homologs_tmp], homolog_output_tmp)
             os.remove(custom_db_homologs_tmp)
         else:
-            concatenate_files([query_proteins, db_homologs_tmp], homolog_ouput_tmp)
+            concatenate_files([query_proteins, db_homologs_tmp], homolog_output_tmp)
 
         os.remove(db_homologs_tmp)
         
         # remove stop codons
-        homolog_ouput = os.path.join(output_dir, 'homologs.faa')
-        self._remove_stop_codons(homolog_ouput_tmp, homolog_ouput)        
-        os.remove(homolog_ouput_tmp)
-            
+        homolog_output = os.path.join(output_dir, 'homologs.faa')
+        remove_stop_codons(homolog_output_tmp, homolog_output)
+        os.remove(homolog_output_tmp)
+
         # infer multiple sequence alignment
         msa = MsaWorkflow(self.cpus)
-        trimmed_msa_output = msa.run(homolog_ouput,
+        trimmed_msa_output = msa.run(homolog_output,
                                         min_per_taxa, 
                                         consensus, 
                                         min_per_bp, 
@@ -290,7 +290,7 @@ class BlastWorkflow():
         # create ARB metadata file
         self.logger.info('Creating ARB metadata file.')
         arb_metadata_file = os.path.join(output_dir, 'arb.metadata.txt')
-        self.create_arb_metadata(homologs, trimmed_msa_output, taxonomy,
+        create_arb_metadata(homologs, trimmed_msa_output, taxonomy,
                                  metadata,
                                  gene_precontext, gene_postcontext,
                                  arb_metadata_file)

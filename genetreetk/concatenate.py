@@ -36,11 +36,12 @@ from biolib.external.raxml import RAxML
 from biolib.external.execute import check_dependencies
 
 from genetreetk.arb_parser import ArbParser
+from genetreetk.common import check_tree_dependencies
 
 import dendropy
 
 
-class Concatenate():
+class Concatenate:
     """Concate MSA for genes and infer concatenated gene tree."""
 
     def __init__(self, cpus):
@@ -52,10 +53,11 @@ class Concatenate():
             Number of cpus to use during homology search.
         """
 
-        check_dependencies(['FastTreeMP', 
-                            'raxmlHPC-PTHREADS-SSE3', 
-                            't2t', 
-                            'seqmagick'])
+        check_dependencies([
+            #'FastTreeMP',
+            #'raxmlHPC-PTHREADS-SSE3',
+            't2t',
+            'seqmagick'])
 
         self.logger = logging.getLogger('timestamp')
 
@@ -135,6 +137,8 @@ class Concatenate():
         output_dir : str
             Directory to store results.
         """
+
+        check_tree_dependencies(tree_program, self.cpus)
 
         # read MSA files
         concat = defaultdict(lambda: defaultdict(list))
@@ -234,7 +238,7 @@ class Concatenate():
             tree_unrooted_output = os.path.join(output_dir, 'concatenated.unrooted.tree')
             tree_log = os.path.join(output_dir, 'concatenated.tree.log')
             tree_output_log = os.path.join(output_dir, 'fasttree.log')
-            fasttree.run(msa_file, 'prot', prot_model, tree_unrooted_output, tree_log, tree_output_log)
+            fasttree.run(msa_file, 'prot', prot_model, False, tree_unrooted_output, tree_log, tree_output_log)
         elif tree_program == 'raxml':
             self.logger.info('Inferring gene tree with RAxML using PROTGAMMA%s.' % prot_model)
             

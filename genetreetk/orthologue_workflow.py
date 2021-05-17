@@ -45,7 +45,7 @@ from numpy import (percentile as np_percentile,
 import dendropy
 import extern
 
-class OrthologueWorkflow():
+class OrthologueWorkflow:
     """Blast-based workflow for building gene trees after finding orthologues."""
 
     def __init__(self, cpus):
@@ -60,8 +60,8 @@ class OrthologueWorkflow():
         check_dependencies(['blastp',
                             'mafft',
                             'muscle',
-                            'FastTreeMP',
-                            'raxmlHPC-PTHREADS-SSE3',
+                            #'FastTreeMP',
+                            #'raxmlHPC-PTHREADS-SSE3',
                             't2t',
                             'seqmagick',
                             'trimal'])
@@ -270,7 +270,7 @@ class OrthologueWorkflow():
                 ))
                 if len(intersection_set) > 0:
                     fasta = os.path.join(ortholog_fasta_folder, "{}.orthologs.faa".format(query))
-                    _extract_sequences(intersection_set, db_homologs_tmp, fasta)
+                    self._extract_sequences(intersection_set, db_homologs_tmp, fasta)
                     query_seq_info = None
                     for seq_id, seq, annotation in seq_io.read_fasta_seq(query_proteins, keep_annotation=True):
                         if seq_id == query:

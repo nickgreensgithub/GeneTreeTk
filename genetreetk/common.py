@@ -34,6 +34,18 @@ from numpy import (percentile as np_percentile,
 import extern
 
 from genetreetk.arb_parser import ArbParser
+from biolib.external.execute import check_dependencies
+
+
+def check_tree_dependencies(tree_program: str, cpus: int):
+    if tree_program == 'fasttree':
+        if cpus > 1:
+            check_dependencies('FastTreeMP')
+        else:
+            check_dependencies('FastTree')
+
+    if tree_program == 'raxml':
+        check_dependencies('raxmlHPC-PTHREADS-SSE3')
 
 
 def validate_seq_ids(query_proteins):
@@ -156,9 +168,12 @@ def _filter_gene_context(gene_context):
             _local_genome_id, local_gene_id = local_seq_id.split('~')
             local_scaffold_id = local_gene_id[0:local_gene_id.rfind('_')]
 
-            # strip organism name and IMG gene id
-            annotation = annotation[0:annotation.rfind('[')]
-            annotation = annotation[0:annotation.rfind('[')].strip()
+            try:
+                # strip organism name and IMG gene id
+                annotation = annotation[0:annotation.rfind('[')]
+                annotation = annotation[0:annotation.rfind('[')].strip()
+            except AttributeError:
+                print("error parsing annotation")
 
             if scaffold_id == local_scaffold_id:
                 filtered_context.append(annotation)
