@@ -34,11 +34,11 @@ from genetreetk.create_database import CreateDatabase
 from genetreetk.tree_compare import TreeCompare
 from genetreetk.orthologue_workflow import OrthologueWorkflow
 from genetreetk.arb_db_creator import ArbDbCreator
-from genetreetk.main import OptionsParser
 
 from biolib.misc.custom_help_formatter import CustomHelpFormatter
 from biolib.logger import logger_setup
 import argparse
+
 
 def version():
     """Read program version from file."""
