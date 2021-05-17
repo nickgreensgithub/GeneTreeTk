@@ -1,7 +1,6 @@
-from distutils.core import setup
+from setuptools import setup
 
 import os
-
 
 def version():
     setupDir = os.path.dirname(os.path.realpath(__file__))
@@ -22,6 +21,6 @@ setup(
     long_description=open('README.md').read(),
     install_requires=[
         "numpy >= 1.8.0",
-        "biolib >= 0.0.36",
+        "biolib @ git+https://git@github.com/nickgreensgithub/biolib.git",
         "dendropy >= 4.0.0"],
 )
