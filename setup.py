@@ -22,5 +22,7 @@ setup(
     install_requires=[
         "numpy >= 1.8.0",
         "biolib @ git+https://git@github.com/nickgreensgithub/biolib.git",
-        "dendropy >= 4.0.0"],
+        "dendropy >= 4.0.0",
+        "extern"
+        ],
 )
