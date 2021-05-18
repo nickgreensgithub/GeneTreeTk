@@ -200,7 +200,7 @@ class BlastWorkflow:
         homolog_output_tmp = os.path.join(output_dir, 'homologs.faa.tmp')
         if custom_homologs:
             custom_db_homologs_tmp = os.path.join(output_dir, 'custom_homologs_db.tmp')
-            custom_gene_precontext, custom_gene_postcontext = self.extract_homologs_and_context(custom_homologs.keys(), custom_db_file, custom_db_homologs_tmp)
+            custom_gene_precontext, custom_gene_postcontext = extract_homologs_and_context(custom_homologs.keys(), custom_db_file, custom_db_homologs_tmp)
             gene_precontext.update(custom_gene_precontext)
             gene_postcontext.update(custom_gene_postcontext)
             homologs.update(custom_homologs)
