@@ -40,12 +40,12 @@ from biolib.external.execute import check_dependencies
 def check_tree_dependencies(tree_program: str, cpus: int):
     if tree_program == 'fasttree':
         if cpus > 1:
-            check_dependencies('FastTreeMP')
+            check_dependencies(['FastTreeMP'])
         else:
-            check_dependencies('FastTree')
+            check_dependencies(['FastTree'])
 
     if tree_program == 'raxml':
-        check_dependencies('raxmlHPC-PTHREADS-SSE3')
+        check_dependencies(['raxmlHPC-PTHREADS-SSE3'])
 
 
 def validate_seq_ids(query_proteins):
